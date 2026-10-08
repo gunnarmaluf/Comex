@@ -27,7 +27,7 @@ void ExibirMenuDeOpcoes()
             break;
         case -1:
             Console.WriteLine("COMEX FINALIZADO");
-            return;
+            break;
 
         case 3:
             cadastrarProduto(produtos);
@@ -58,40 +58,48 @@ void fecharCompra(Dictionary<string, string> clientes, Dictionary<string, List<K
     Console.Write("Digite o nome do cliente:");
     string nomeCliente = Console.ReadLine()!;
 
-    if (clientes.ContainsKey(nomeCliente))
+    try
     {
-        if (carrinhoDeCompras.ContainsKey(nomeCliente))
+        if (clientes.ContainsKey(nomeCliente))
         {
-            Console.WriteLine($"O cliente {nomeCliente} possui os seguintes produtos em seu carrinho de compras:");
-            float soma = 0;
-            foreach (KeyValuePair<string, float> produto in carrinhoDeCompras[nomeCliente])
+            if (carrinhoDeCompras.ContainsKey(nomeCliente))
             {
-                Console.Write($"\nProduto:{produto.Key} \t\t Valor:{produto.Value}");
-                soma = soma + produto.Value;
+                Console.WriteLine($"O cliente {nomeCliente} possui os seguintes produtos em seu carrinho de compras:");
+                float soma = 0;
+                foreach (KeyValuePair<string, float> produto in carrinhoDeCompras[nomeCliente])
+                {
+                    Console.Write($"\nProduto:{produto.Key} \t\t Valor:{produto.Value}");
+                    soma = soma + produto.Value;
+                }
+
+                Console.WriteLine($"\nTotal:{soma}");
+
+                Console.Write("\nDigite o número do cartão de crédito:");
+                string cartao = Console.ReadLine()!;
+                Console.WriteLine($"\nRealizando o pagamento de R${soma} no cartão {cartao}");
+                Thread.Sleep(3000);
+                ExibirMenuDeOpcoes();
+            }
+            else
+            {
+                Console.WriteLine($"O cliente {nomeCliente} não possui carrinho");
+                limpaTela();
+                ExibirMenuDeOpcoes();
             }
 
-            Console.WriteLine($"\nTotal:{soma}");
 
-            Console.Write("\nDigite o número do cartão de crédito:");
-            string cartao = Console.ReadLine()!;
-            Console.WriteLine($"\nRealizando o pagamento de R${soma} no cartão {cartao}");
-            Thread.Sleep(3000);
-            ExibirMenuDeOpcoes();
         }
         else
         {
-            Console.WriteLine($"O cliente {nomeCliente} não possui carrinho");
+            Console.WriteLine($"O cliente {nomeCliente} não está cadastrado");
             limpaTela();
             ExibirMenuDeOpcoes();
         }
-
-
     }
-    else
+    catch (Exception)
     {
-        Console.WriteLine($"O cliente {nomeCliente} não está cadastrado");
-        limpaTela();
-        ExibirMenuDeOpcoes();
+
+        Console.WriteLine("Algo inesperado aconteceu.");
     }
 
     limpaTela();
@@ -104,20 +112,27 @@ void ajustarPrecoProduto(Dictionary<string, float> produtos)
     Console.Clear();
     Console.WriteLine("**********Alterar Preço de Produto**********");
     Console.WriteLine("Digite o nome do produto:");
-    string nome = Console.ReadLine()!;
-    if (produtos.ContainsKey(nome))
+    try
     {
-        Console.WriteLine($"Preço atual do produto {nome}: R$ {produtos[nome]}");
-        Console.WriteLine("Digite o novo preço do produto (use vírgula ou ponto conforme cultura):");
-        float novoPreco = float.Parse(Console.ReadLine()!);
-        produtos[nome] = novoPreco;
-        Console.WriteLine($"Preço do produto {nome} atualizado para R$ {novoPreco} com sucesso!");
-        Thread.Sleep(1000);
+        string nome = Console.ReadLine()!;
+        if (produtos.ContainsKey(nome))
+        {
+            Console.WriteLine($"Preço atual do produto {nome}: R$ {produtos[nome]}");
+            Console.WriteLine("Digite o novo preço do produto (use vírgula ou ponto conforme cultura):");
+            float novoPreco = float.Parse(Console.ReadLine()!);
+            produtos[nome] = novoPreco;
+            Console.WriteLine($"Preço do produto {nome} atualizado para R$ {novoPreco} com sucesso!");
+            Thread.Sleep(1000);
+        }
+        else
+        {
+            Console.WriteLine($"Produto {nome} não cadastrado no sistema.");
+            Thread.Sleep(1000);
+        }
     }
-    else
+    catch (Exception)
     {
-        Console.WriteLine($"Produto {nome} não cadastrado no sistema.");
-        Thread.Sleep(1000);
+        Console.WriteLine("Algo inesperado aconteceu.");
     }
 
     limpaTela();
@@ -126,9 +141,17 @@ void ajustarPrecoProduto(Dictionary<string, float> produtos)
 
 void listarClientes(Dictionary<string, string> clientes)
 {
-    foreach (KeyValuePair<string, string> cliente in clientes)
+    try
     {
-        Console.WriteLine($"Nome: {cliente.Key}, CPF: {cliente.Value}");
+        foreach (KeyValuePair<string, string> cliente in clientes)
+        {
+            Console.WriteLine($"Nome: {cliente.Key}, CPF: {cliente.Value}");
+        }
+    }
+    catch (Exception)
+    {
+
+        Console.WriteLine("Algo inesperado aconteceu.");
     }
 
     Thread.Sleep(3000);
@@ -140,14 +163,21 @@ void cadastrarCliente(Dictionary<string, string> clientes)
     Console.Clear();
     Console.WriteLine("**********Registro de Cliente**********");
     Console.WriteLine("Digite o nome do cliente:");
-    string nome = Console.ReadLine()!;
-    Console.WriteLine("Digite o cpf do cliente:");
-    string cpf = Console.ReadLine()!;
+    try
+    {
+        string nome = Console.ReadLine()!;
+        Console.WriteLine("Digite o cpf do cliente:");
+        string cpf = Console.ReadLine()!;
 
-    clientes[nome] = cpf;
-    carrinhoDeCompras[nome] = new List<KeyValuePair<string, float>>();
+        clientes[nome] = cpf;
+        carrinhoDeCompras[nome] = new List<KeyValuePair<string, float>>();
 
-    Console.WriteLine($"Usuário {nome} ({cpf}) cadastrado com sucesso!");
+        Console.WriteLine($"Usuário {nome} ({cpf}) cadastrado com sucesso!");
+    }
+    catch (Exception)
+    {
+        Console.WriteLine("Algo inesperado aconteceu.");
+    }
     limpaTela();
 }
 
@@ -156,13 +186,20 @@ void cadastrarProduto(Dictionary<string, float> produtos)
     Console.Clear();
     Console.WriteLine("**********Registro de Produto**********");
     Console.WriteLine("Digite o nome do produto:");
-    string nome = Console.ReadLine()!;
-    Console.WriteLine("Digite o preço do produto (use vírgula ou ponto conforme cultura):");
-    float preco = float.Parse(Console.ReadLine()!);
+    try
+    {
+        string nome = Console.ReadLine()!;
+        Console.WriteLine("Digite o preço do produto (use vírgula ou ponto conforme cultura):");
+        float preco = float.Parse(Console.ReadLine()!);
 
-    produtos[nome] = preco;
+        produtos[nome] = preco;
 
-    Console.WriteLine($"Produto {nome} (R$ {preco}) cadastrado com sucesso!");
+        Console.WriteLine($"Produto {nome} (R$ {preco}) cadastrado com sucesso!");
+    }
+    catch (Exception)
+    {
+        Console.WriteLine("Algo inesperado aconteceu.");
+    }
     limpaTela();
 }
 
@@ -171,35 +208,42 @@ void adicionarProdutoAoCarrinho(Dictionary<string, List<KeyValuePair<string, flo
     Console.Clear();
     Console.WriteLine("***** Adicionar Produto ao Carrinho *****");
     Console.WriteLine("Digite o nome do cliente:");
-    string nomeCliente = Console.ReadLine()!;
-    if (clientes.ContainsKey(nomeCliente))
+    try
     {
-        Console.WriteLine("Qual produto deseja adicionar ao carrinho?");
-        string nomeProduto = Console.ReadLine()!;
-        if (produtos.ContainsKey(nomeProduto))
+        string nomeCliente = Console.ReadLine()!;
+        if (clientes.ContainsKey(nomeCliente))
         {
-            KeyValuePair<string, float> produto = new KeyValuePair<string, float>(nomeProduto, produtos[nomeProduto]);
-
-            if (carrinhoDeCompras[nomeCliente] != null) //verificar se o cliente possui carrinho
+            Console.WriteLine("Qual produto deseja adicionar ao carrinho?");
+            string nomeProduto = Console.ReadLine()!;
+            if (produtos.ContainsKey(nomeProduto))
             {
+                KeyValuePair<string, float> produto = new KeyValuePair<string, float>(nomeProduto, produtos[nomeProduto]);
 
-                //se possuir carrinho, adiciona.
-                carrinhoDeCompras[nomeCliente].Add(produto);
+                if (carrinhoDeCompras[nomeCliente] != null) //verificar se o cliente possui carrinho
+                {
+
+                    //se possuir carrinho, adiciona.
+                    carrinhoDeCompras[nomeCliente].Add(produto);
+                }
+                Console.WriteLine($"Produto {nomeProduto} adicionado ao carrinho do cliente {nomeCliente}!");
+                limpaTela();
             }
-            Console.WriteLine($"Produto {nomeProduto} adicionado ao carrinho do cliente {nomeCliente}!");
-            limpaTela();
+            else
+            {
+                Console.WriteLine("Produto não cadastrado!");
+                limpaTela();
+            }
+
         }
         else
         {
-            Console.WriteLine("Produto não cadastrado!");
+            Console.WriteLine("Cliente não cadastrado!");
             limpaTela();
         }
-
     }
-    else
+    catch (Exception)
     {
-        Console.WriteLine("Cliente não cadastrado!");
-        limpaTela();
+        Console.WriteLine("Algo inesperado aconteceu.");
     }
 
 }
