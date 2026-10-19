@@ -1,15 +1,18 @@
-﻿Dictionary<string, string> clientes = new Dictionary<string, string>();
-Dictionary<string, float> produtos = new Dictionary<string, float>();
-Dictionary<string, List<KeyValuePair<string, float>>> carrinhoDeCompras = new Dictionary<string, List<KeyValuePair<string, float>>>();
+﻿using Comex.Modelo;
+
+Dictionary<string, string> clientes = new Dictionary<string, string>();
+Dictionary<string, Produto> produtos = new Dictionary<string,Produto>();
+Dictionary<string, List<Produto>> carrinhoDeCompras = new Dictionary<string, List<Produto>>();
 void ExibirMenuDeOpcoes()
 {
     Console.WriteLine("Menu de Opções:");
     Console.WriteLine("1. Cadastrar Cliente");
     Console.WriteLine("2. Listar Clientes");
     Console.WriteLine("3. Cadastrar Produto");
-    Console.WriteLine("4. Ajustar Preço de Produto");
-    Console.WriteLine("5. Adicionar Produto ao Carrinho");
-    Console.WriteLine("6. Fechar Compra");
+    Console.WriteLine("4. Listar Produtos");
+    Console.WriteLine("5. Ajustar Preço de Produto");
+    Console.WriteLine("6. Adicionar Produto ao Carrinho");
+    Console.WriteLine("7. Fechar Compra");
     Console.WriteLine("-1. Sair");
     Console.Write("Digite o número da opção desejada:");
 
@@ -22,11 +25,9 @@ void ExibirMenuDeOpcoes()
         case 1:
             cadastrarCliente(clientes);
             break;
+
         case 2:
             listarClientes(clientes);
-            break;
-        case -1:
-            Console.WriteLine("COMEX FINALIZADO");
             break;
 
         case 3:
@@ -34,15 +35,23 @@ void ExibirMenuDeOpcoes()
             break;
 
         case 4:
-            ajustarPrecoProduto(produtos);
+            listarProdutos(produtos);
             break;
 
         case 5:
-            adicionarProdutoAoCarrinho(carrinhoDeCompras, produtos, clientes);
+            ajustarPrecoProduto(produtos);
             break;
 
         case 6:
+            adicionarProdutoAoCarrinho(carrinhoDeCompras, produtos, clientes);
+            break;
+
+        case 7:
             fecharCompra(clientes, carrinhoDeCompras);
+            break;
+
+        case -1:
+            Console.WriteLine("COMEX FINALIZADO");
             break;
 
         default:
@@ -52,7 +61,7 @@ void ExibirMenuDeOpcoes()
 
 }
 
-void fecharCompra(Dictionary<string, string> clientes, Dictionary<string, List<KeyValuePair<string, float>>> carrinhoDeCompras)
+void fecharCompra(Dictionary<string, string> clientes, Dictionary<string, List<Produto>> carrinhoDeCompras)
 {
     Console.WriteLine("**********Fechar Compra**********");
     Console.Write("Digite o nome do cliente:");
@@ -65,11 +74,11 @@ void fecharCompra(Dictionary<string, string> clientes, Dictionary<string, List<K
             if (carrinhoDeCompras.ContainsKey(nomeCliente))
             {
                 Console.WriteLine($"O cliente {nomeCliente} possui os seguintes produtos em seu carrinho de compras:");
-                float soma = 0;
-                foreach (KeyValuePair<string, float> produto in carrinhoDeCompras[nomeCliente])
+                double soma = 0;
+                foreach (Produto produto in carrinhoDeCompras[nomeCliente])
                 {
-                    Console.Write($"\nProduto:{produto.Key} \t\t Valor:{produto.Value}");
-                    soma = soma + produto.Value;
+                    Console.Write($"\nProduto:{produto.Nome} \t\t Valor:{produto.Preco}");
+                    soma = soma + produto.Preco;
                 }
 
                 Console.WriteLine($"\nTotal:{soma}");
@@ -107,7 +116,7 @@ void fecharCompra(Dictionary<string, string> clientes, Dictionary<string, List<K
 
 }
 
-void ajustarPrecoProduto(Dictionary<string, float> produtos)
+void ajustarPrecoProduto(Dictionary<string, Produto> produtos)
 {
     Console.Clear();
     Console.WriteLine("**********Alterar Preço de Produto**********");
@@ -117,11 +126,11 @@ void ajustarPrecoProduto(Dictionary<string, float> produtos)
         string nome = Console.ReadLine()!;
         if (produtos.ContainsKey(nome))
         {
-            Console.WriteLine($"Preço atual do produto {nome}: R$ {produtos[nome]}");
+            Console.WriteLine($"Preço atual do produto {nome}: R$ {produtos[nome].Preco}");
             Console.WriteLine("Digite o novo preço do produto (use vírgula ou ponto conforme cultura):");
-            float novoPreco = float.Parse(Console.ReadLine()!);
-            produtos[nome] = novoPreco;
-            Console.WriteLine($"Preço do produto {nome} atualizado para R$ {novoPreco} com sucesso!");
+            double novoPreco = double.Parse(Console.ReadLine()!);
+            produtos[nome].Preco = novoPreco;
+            Console.WriteLine($"Preço do produto {nome} atualizado para R$ {produtos[nome].Preco} com sucesso!");
             Thread.Sleep(1000);
         }
         else
@@ -170,7 +179,7 @@ void cadastrarCliente(Dictionary<string, string> clientes)
         string cpf = Console.ReadLine()!;
 
         clientes[nome] = cpf;
-        carrinhoDeCompras[nome] = new List<KeyValuePair<string, float>>();
+        carrinhoDeCompras[nome] = new List<Produto>();
 
         Console.WriteLine($"Usuário {nome} ({cpf}) cadastrado com sucesso!");
     }
@@ -181,8 +190,9 @@ void cadastrarCliente(Dictionary<string, string> clientes)
     limpaTela();
 }
 
-void cadastrarProduto(Dictionary<string, float> produtos)
+void cadastrarProduto(Dictionary<string, Produto> produtos)
 {
+    
     Console.Clear();
     Console.WriteLine("**********Registro de Produto**********");
     Console.WriteLine("Digite o nome do produto:");
@@ -190,9 +200,13 @@ void cadastrarProduto(Dictionary<string, float> produtos)
     {
         string nome = Console.ReadLine()!;
         Console.WriteLine("Digite o preço do produto (use vírgula ou ponto conforme cultura):");
-        float preco = float.Parse(Console.ReadLine()!);
+        double preco = double.Parse(Console.ReadLine()!);
+        /*Console.WriteLine("Digite a quantidade do produto em estoque:");
+        int quantidade = int.Parse(Console.ReadLine()!);*/
 
-        produtos[nome] = preco;
+        Produto produto = new Produto(nome, preco);
+        produto.Preco = preco;
+        produtos[nome] = produto;
 
         Console.WriteLine($"Produto {nome} (R$ {preco}) cadastrado com sucesso!");
     }
@@ -203,7 +217,7 @@ void cadastrarProduto(Dictionary<string, float> produtos)
     limpaTela();
 }
 
-void adicionarProdutoAoCarrinho(Dictionary<string, List<KeyValuePair<string, float>>> carrinhoDeCompras, Dictionary<string, float> produtos, Dictionary<string, string> clientes)
+void adicionarProdutoAoCarrinho(Dictionary<string, List<Produto>> carrinhoDeCompras, Dictionary<string, Produto> produtos, Dictionary<string, string> clientes)
 {
     Console.Clear();
     Console.WriteLine("***** Adicionar Produto ao Carrinho *****");
@@ -215,9 +229,13 @@ void adicionarProdutoAoCarrinho(Dictionary<string, List<KeyValuePair<string, flo
         {
             Console.WriteLine("Qual produto deseja adicionar ao carrinho?");
             string nomeProduto = Console.ReadLine()!;
-            if (produtos.ContainsKey(nomeProduto))
+            /*Console.WriteLine($"Qual o preço do {nomeProduto}?");
+            double preco = double.Parse(Console.ReadLine()!);*/
+            Console.WriteLine($"Quantos {nomeProduto} deseja adicionar ao carrinho?");
+            int quantidade = int.Parse(Console.ReadLine()!);
+            if (produtos.ContainsKey(nomeProduto) && quantidade > 0)
             {
-                KeyValuePair<string, float> produto = new KeyValuePair<string, float>(nomeProduto, produtos[nomeProduto]);
+                Produto produto = produtos[nomeProduto];
 
                 if (carrinhoDeCompras[nomeCliente] != null) //verificar se o cliente possui carrinho
                 {
@@ -253,6 +271,28 @@ void limpaTela()
     Thread.Sleep(2000);
     Console.Clear();
     ExibirMenuDeOpcoes();
+}
+
+void listarProdutos(Dictionary<string, Produto> produtos) {
+
+    Console.Clear();
+    Console.WriteLine("**********Lista de Produtos Cadastrados**********");
+    
+    try
+    {
+
+        foreach (Produto produto in produtos.Values) 
+        {
+            Console.WriteLine($"Produto: {produto.Nome}\t\t Preço: {produto.Preco} \t\t Quantidade: {produto.Quantidade}");
+        
+        }
+        
+    }
+    catch (Exception)
+    {
+        Console.WriteLine("Algo inesperado aconteceu.");
+    }
+    limpaTela();
 }
 
 ExibirMenuDeOpcoes();
