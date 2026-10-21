@@ -4,8 +4,10 @@ using System.Text;
 
 namespace Comex.Modelo;
 
-internal class Cliente
+public class Cliente: Identificar
 {
+    private List<Produto> carrinhoDeCompras = new List<Produto>();
+    public List<Produto> CarrinhoDeCompras => carrinhoDeCompras;
 
     private string nome;
 
@@ -27,8 +29,12 @@ internal class Cliente
 
     public string Telefone { get { return telefone; } set { telefone = value; } }
 
-    private Endereco endereco;
+    private Endereco endereco = new Endereco();
 
     public Endereco Endereco { get { return endereco; } set { endereco = value; } }
 
+    public string Identificar() {
+
+        return $"Cliente {Nome} \n CPF:{CPF}";
+    }
 }

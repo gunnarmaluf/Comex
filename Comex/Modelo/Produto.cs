@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Comex.Modelo;
 
-internal class Produto
+public class Produto
 {
     private string nome;
 
