@@ -11,9 +11,11 @@ menu.Add(1, new MenuCadastrarCliente());
 menu.Add(2, new MenuListarCliente());
 menu.Add(3, new MenuCadastrarProduto());
 menu.Add(4, new MenuListarProduto());
-menu.Add(5, new MenuAjustarPreco());
-menu.Add(6, new MenuAdicionarProdutoAoCarinho());
-menu.Add(7, new MenuFecharCompra());
+menu.Add(5, new MenuListarProdutoOrdenadoPorNome());
+menu.Add(6, new MenuOrdenarProdutosPeloPreco());
+menu.Add(7, new MenuAjustarPreco());
+menu.Add(8, new MenuAdicionarProdutoAoCarinho());
+menu.Add(9, new MenuFecharCompra());
 menu.Add(-1, new MenuSair());
 
 CadastrarProdutos();
@@ -110,9 +112,11 @@ bool ExibirMenuDeOpcoes()
     Console.WriteLine("2. Listar Clientes");
     Console.WriteLine("3. Cadastrar Produto");
     Console.WriteLine("4. Listar Produtos");
-    Console.WriteLine("5. Ajustar Preço de Produto");
-    Console.WriteLine("6. Adicionar Produto ao Carrinho");
-    Console.WriteLine("7. Fechar Compra");
+    Console.WriteLine("5. Listar Produtos Ordenados Pelo Nome");
+    Console.WriteLine("6. Listar Produtos Ordenados Pelo Preco");
+    Console.WriteLine("7. Ajustar Preço de Produto");
+    Console.WriteLine("8. Adicionar Produto ao Carrinho");
+    Console.WriteLine("9. Fechar Compra");
     Console.WriteLine("-1. Sair");
     Console.Write("Digite o número da opção desejada:");
 
