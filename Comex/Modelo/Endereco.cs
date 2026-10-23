@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Comex.Modelo;
 
-internal class Endereco
+public class Endereco
 {
-    private string nome;
+    private string bairro;
 
-    public string Nome { get { return nome; } set { nome = value; } }
+    public string Bairro { get { return bairro; } set { bairro = value; } }
 
     private string cidade;
 
