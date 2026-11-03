@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Comex.Modelo;
 
 internal class Produto
 {
+    [JsonPropertyName("title")]
     private string nome;
 
     public string Nome { get { return nome; } set { nome = value; } }
 
+    [JsonPropertyName("description")]
     private string descricao;
 
     public string Descricao { get { return descricao; } set { descricao = value; } }
 
+    [JsonPropertyName("price")]
     private double preco;
 
     public double Preco { get { return preco; } set { preco = value; } }
