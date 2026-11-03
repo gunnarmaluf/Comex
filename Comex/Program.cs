@@ -16,6 +16,7 @@ menu.Add(6, new MenuOrdenarProdutosPeloPreco());
 menu.Add(7, new MenuAjustarPreco());
 menu.Add(8, new MenuAdicionarProdutoAoCarinho());
 menu.Add(9, new MenuFecharCompra());
+menu.Add(10, new MenuConsultarProdutosApi());
 menu.Add(-1, new MenuSair());
 
 CadastrarProdutos();
@@ -117,10 +118,12 @@ bool ExibirMenuDeOpcoes()
     Console.WriteLine("7. Ajustar Preço de Produto");
     Console.WriteLine("8. Adicionar Produto ao Carrinho");
     Console.WriteLine("9. Fechar Compra");
+    Console.WriteLine("10. Consultar Produtos API");
     Console.WriteLine("-1. Sair");
     Console.Write("Digite o número da opção desejada:");
 
     int opcao = int.Parse(Console.ReadLine()!);
+
     Console.WriteLine("\nOpção selecionada: " + opcao);
     
     menu[opcao].Executar(clientes, produtos);

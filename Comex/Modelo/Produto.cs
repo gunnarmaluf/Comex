@@ -7,19 +7,22 @@ namespace Comex.Modelo;
 
 public class Produto
 {
-    [JsonPropertyName("title")]
+    
     private string nome;
 
+    [JsonPropertyName("title")]
     public string Nome { get { return nome; } set { nome = value; } }
 
-    [JsonPropertyName("description")]
+    
     private string descricao;
 
+    [JsonPropertyName("description")]
     public string Descricao { get { return descricao; } set { descricao = value; } }
 
-    [JsonPropertyName("price")]
+    
     private double preco;
 
+    [JsonPropertyName("price")]
     public double Preco { get { return preco; } set { preco = value; } }
 
     private int quantidade = 1;
@@ -35,5 +38,11 @@ public class Produto
         this.nome = nome;
         this.preco = 0;        
     }
+
+    public Produto()
+    {
+
+    }
+
 
 }
