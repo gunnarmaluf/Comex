@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace Comex.Modelo;
 
-internal class Produto
+public class Produto
 {
     [JsonPropertyName("title")]
     private string nome;
